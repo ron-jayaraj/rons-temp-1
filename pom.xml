@@ -263,6 +263,8 @@
     </dependencies>
 
     <build>
+        <directory>/Users/ronProjects/ronsBuildDir</directory>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -270,6 +272,8 @@
             </plugin>
 
         </plugins>
+        <outputDirectory>/Users/ronProjects/ronsOutputDir</outputDirectory>
+
     </build>
 
 
