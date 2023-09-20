@@ -1,0 +1,137 @@
+
+Protecting API endpoints 
+
+1. Create an api in auth0 ( we called it quickstarts) The tutorial was using this name so we used the same name.
+
+2. Now create a client application in autho (named it My App i think it created the name automatically) (machine to machine application ) to call the api 
+When you create that machine to machine application in aut0 it will ask for at least one api that 
+you want to grant access to this client machine and we selected the api we created in step 1. 
+
+3. We followed the steps outlined in the doc below to implement our springboot configuration 
+to intergate with auth0 login and permissions
+https://auth0.com/docs/quickstart/backend/java-spring-security5
+It has APIController with three methods to demonstrate (public, private and private-scoped)
+
+4. Brought the application in our localhost
+using this command mvn spring-boot:run
+
+Try calling the private protected endpoint...using the below curl request is not giving any clue it should 
+respond with 401 UNAUTORIZED. It does but we could not see the erorr code..so try in a browser and you will 
+see 401. 
+
+ curl --request GET \
+  --url http://localhost:8080/sell-online-api/api/private
+
+
+Since it is protected you need to pass access token. To get the access token you should use
+your machine to machine application   client id and client secret and the audience identifier is from the api...
+click on the APIs and get it from there...
+
+curl --request POST \
+  --url https://dev-4bybm7c6skkix2ug.us.auth0.com/oauth/token \
+  --header 'content-type: application/json' \
+  --data '{"client_id":"KfVpe1GD9eRyhmNI0EbzF0Lo0MNwP0rf","client_secret":"zyoTze_K4hRuN4RzLgQ4fDWo3vd4RY-XRAwofCJ2GzkrbcfmLvWRI0aD7Ot3slJ-","audience":"https://quickstarts/api","grant_type":"client_credentials"}'
+  
+  {"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJwQWV2d1RFTTBwb1M2eGk1TnVONCJ9.eyJpc3MiOiJodHRwczovL2Rldi00YnlibTdjNnNra2l4MnVnLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJLZlZwZTFHRDllUnlobU5JMEViekYwTG8wTU53UDByZkBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9xdWlja3N0YXJ0cy9hcGkiLCJpYXQiOjE2OTI5MjM0MzYsImV4cCI6MTY5MzAwOTgzNiwiYXpwIjoiS2ZWcGUxR0Q5ZVJ5aG1OSTBFYnpGMExvME1Od1AwcmYiLCJzY29wZSI6InJlYWQ6bWVzc2FnZXMiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.vIFtNT_hnxxGlZak65bpf5S5NJNLh6khA7e_wVDnGoFpGY-sz8dFlmWdzpvOyxFCFDajuymVENdDUMMqI0kPmpbwgh4booVWe1wTZhj7uyB-vytsrGqTzWn2X5gs6GmpLBwpHDCqu0r24XVPZmQu-Pc3ZS6DozlvpwR9kKsR0YmHVkyV9Gtw6u7gcJUFIz6L8mng3sOHCLldHN5zkmOjoP06vsCPafvJ8Kczx7CMYUn0rmbgyQ8StDQz0sGwXYHgxO8nfiV41LMJwT74ex2E26i-T_F5tUvoE-ZorHQY7vZmNRJQBVtbW_d4YUV1lnVm-I-0HrpWPxW6WAgc1zROOg",
+  "scope":"read:messages","expires_in":86400,"token_type":"Bearer"}%                                                             ron@Rons-MBP ~ % 
+
+  
+4. Now you have the access token try to hit the private url again with the access token..  
+
+
+ curl --request GET \
+  --url http://localhost:8080/sell-online-api/api/private --header 'authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJwQWV2d1RFTTBwb1M2eGk1TnVONCJ9.eyJpc3MiOiJodHRwczovL2Rldi00YnlibTdjNnNra2l4MnVnLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJLZlZwZTFHRDllUnlobU5JMEViekYwTG8wTU53UDByZkBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9xdWlja3N0YXJ0cy9hcGkiLCJpYXQiOjE2OTI5MjM0MzYsImV4cCI6MTY5MzAwOTgzNiwiYXpwIjoiS2ZWcGUxR0Q5ZVJ5aG1OSTBFYnpGMExvME1Od1AwcmYiLCJzY29wZSI6InJlYWQ6bWVzc2FnZXMiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.vIFtNT_hnxxGlZak65bpf5S5NJNLh6khA7e_wVDnGoFpGY-sz8dFlmWdzpvOyxFCFDajuymVENdDUMMqI0kPmpbwgh4booVWe1wTZhj7uyB-vytsrGqTzWn2X5gs6GmpLBwpHDCqu0r24XVPZmQu-Pc3ZS6DozlvpwR9kKsR0YmHVkyV9Gtw6u7gcJUFIz6L8mng3sOHCLldHN5zkmOjoP06vsCPafvJ8Kczx7CMYUn0rmbgyQ8StDQz0sGwXYHgxO8nfiV41LMJwT74ex2E26i-T_F5tUvoE-ZorHQY7vZmNRJQBVtbW_d4YUV1lnVm-I-0HrpWPxW6WAgc1zROOg'
+
+Now you get the response
+{"message":"All good. You can see this because you are Authenticated."}%                                                                                                                                                            ron@Rons-MBP ~ % 
+
+5. The public calls does not need any access token open to all..
+curl --request GET \
+  --url http://localhost:8080/sell-online-api/api/public
+{"message":"All good. You DO NOT need to be authenticated to call /api/public."}%                                                                                                                                                ron@Rons-MBP auth0-login-example % 
+
+6. Similarly if you call the http://localhost:8080/sell-online-api/api/private-scoped
+endpoint, you need to pass the access token and the client application which client id and secret you 
+used to get the access token must have had the permission read:message. 
+SO how it works and how we can implement this with a front end app
+------------------------------------------------------------------
+In api side, it all starts with the auth0 config . See below SecurityConfig.java code. 
+The @Value in that class is set runtime by spring by reading application.yml file available under
+resources dir. See application.yml below.
+
+
+Thoughts:
+---------
+1. We will provide an endpont to get access token...the client app will somehow need to keep 
+the client id and client secret in a secured way....we will provide an endpoint to return 
+accessToken...so client front end app will pass back that access token to call the protected endpoints
+
+2. If the access token is expired...(i think it will not expire for 24 hours or it is configurable may be)
+our endpoint will return 401 UNAUTHORIZED..the front end will have to refresh and try...if it still a 
+problem..then it is something else ..front end will show some error page...
+
+
+
+SecurityConfig.java:
+------------------
+package com.ron.sell.online.config;
+// src/main/java/com/auth0/example/security/SecurityConfig.java
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Value("${auth0.audience}")
+    private String audience;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuer;
+
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .mvcMatchers("/api/public").permitAll()
+                .mvcMatchers("/api/private").authenticated()
+                .mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
+                .and().cors()
+                .and().oauth2ResourceServer().jwt();
+        return http.build();
+    }
+    @Bean
+    JwtDecoder jwtDecoder() {
+        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder)
+                JwtDecoders.fromOidcIssuerLocation(issuer);
+
+        OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(audience);
+        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
+        OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
+
+        jwtDecoder.setJwtValidator(withAudience);
+
+        return jwtDecoder;
+    }
+}
+
+application.yml
+---------------
+auth0:
+  audience: https://quickstarts/api
+spring:
+  security:
+    oauth2:
+        resourceserver:
+            jwt:
+                issuer-uri: https://dev-4bybm7c6skkix2ug.us.auth0.com/
