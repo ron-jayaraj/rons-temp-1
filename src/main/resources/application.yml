@@ -1,0 +1,8 @@
+auth0:
+  audience: https://quickstarts/api
+spring:
+  security:
+    oauth2:
+        resourceserver:
+            jwt:
+                issuer-uri: https://dev-4bybm7c6skkix2ug.us.auth0.com/

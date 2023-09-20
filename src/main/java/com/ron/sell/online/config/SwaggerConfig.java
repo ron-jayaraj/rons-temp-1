@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 public class SwaggerConfig {
 
         @Bean
-        public OpenAPI openAPI(@Value("${server.contextPath}") String contextPath) {
+        public OpenAPI openAPI(@Value("${server.servlet.contextPath}") String contextPath) {
                 return new OpenAPI()
                                 .addServersItem(new Server().url(contextPath))
 
