@@ -302,7 +302,6 @@
             </plugin>
 
         </plugins>
-        <outputDirectory>/Users/ronProjects/ronsOutputDir</outputDirectory>
 
     </build>
 
