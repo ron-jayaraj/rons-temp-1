@@ -26,13 +26,31 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+
+        http
+        .authorizeRequests(authorizeRequests ->
+            authorizeRequests
                 .mvcMatchers("/api/public").permitAll()
+                .mvcMatchers("/api-user/login").permitAll()
+                .mvcMatchers("/api/private").authenticated()
+                .mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
+        )
+        .cors()
+        .and().csrf().disable()
+        .oauth2ResourceServer().jwt();
+    return http.build();
+        
+       
+       /* http.authorizeRequests()
+                .mvcMatchers("/api/public").permitAll()
+                .mvcMatchers("/api-user/login").permitAll()
                 .mvcMatchers("/api/private").authenticated()
                 .mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 .and().cors()
                 .and().oauth2ResourceServer().jwt();
         return http.build();
+        */
+
     }
     @Bean
     JwtDecoder jwtDecoder() {

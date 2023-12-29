@@ -1,7 +1,39 @@
 
-Protecting API endpoints 
 
-1. Create an api in auth0 ( we called it quickstarts) The tutorial was using this name so we used the same name.
+
+================  Protecting API endpoints ===================================================================
+
+**************
+Before reading below read this all the below urls must be changed like this to use https and port 8443 and add --insecure to curl to 
+ignore the curl verifying our self signed certificate...it is not working since it is a self signed certificate so we have to ignore it...
+'curl --help' or 'curl --manual' for more information
+ron@Rons-MBP .ssh % BELOW IS THE COMMAND
+curl --insecure --request GET \   --url https://localhost:8443/sell-online-api/api/public
+
+NOTE : swagger url after 
+https set up
+ https://localhost:8443/sell-online-api/swagger-ui/index.html?configUrl=/sell-online-api/v3/api-docs/swagger-config#/Mail%20Trap%20Demo%20endpoint
+
+1. Create an api in auth0 ( we called it RonsApi-UserNeedsToLogInToAccessSomeEndpoints (Test Application)
+in auth0.com use google to log in heyron123@gmail.com
+
+Our app login id using the auth0url is below... you can see the redirect url where auth0 will redirect to our app.. this is the url that should be listed as callback url in auth0
+
+LOGIN URL
+https://dev-4bybm7c6skkix2ug.us.auth0.com/authorize?nonce=some1234&response_type=id_token&client_id=rM0FGmJz4QE1nLAnFuDcgACrkvss4wbC&redirect_uri=https://localhost:8443/sell-online-api/api-user/login
+
+ONE MORE TIME HERE IS THE LOGIN URL
+https://dev-4bybm7c6skkix2ug.us.auth0.com/authorize?nonce=some1234&response_type=id_token&client_id=rM0FGmJz4QE1nLAnFuDcgACrkvss4wbC&redirect_uri=https://localhost:8443/sell-online-api/api-user/login
+
+Well i was redirected by auth0 to the redirect url with the following so kept fixing the login url
+https://localhost:8443/sell-online-api/api-user/login?error=unsupported_response_type&error_description=Unsupported%20response%20type%3A%20client_credentials
+
+Look at the client id ..you can identify the app in autho
+
+
+2.  auth0 showed the login page and i signed up ronaldarul@yahoo.com/Hello821# and it called my login url with id_token as below
+
+https://localhost:8443/sell-online-api/api-user/login#id_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJwQWV2d1RFTTBwb1M2eGk1TnVONCJ9.eyJpc3MiOiJodHRwczovL2Rldi00YnlibTdjNnNra2l4MnVnLnVzLmF1dGgwLmNvbS8iLCJhdWQiOiJyTTBGR21KejRRRTFuTEFuRnVEY2dBQ3JrdnNzNHdiQyIsImlhdCI6MTY5OTkyMTkxMCwiZXhwIjoxNjk5OTU3OTEwLCJzdWIiOiJhdXRoMHw2NTUyYmUyMmQ1MDRjYjU4YzQzOTllM2EiLCJzaWQiOiJ0dndMVngybEd1RnJOSWhWOER5N1NKN3pRWm1LbkdYdCIsIm5vbmNlIjoic29tZTEyMzQifQ.PeorbuQqB6xpS318rO0I5priuKCdk6Lil-za0MkyPt3LtPr-ib6sgD0Oh4uhHJI2iPVLUTQbtbCeFYGTsCSTx93lRQX9uaLXcKQE8dMK4ck1224juLsaYtZ7tnAkPfh1HJIk05ViaSzB574VAfz8Jsxd7wFAOZX0q832TFfNW_ir7LLfNWpJHcYZAFrOu9pleGV0P_EqvJ_ai1cAeh62nlMWREcNb12C9NnHjIEIVkat2KvUXhRhXA0oNxGGOqpAnUrgJdz6mGmFrCD_FvQeeShOz-amUlRd-0TVDHzlZybxvApSprG067SUn7AfMb286jVpq9cXcpZ3Gp3DnOTd2g
 
 2. Now create a client application in autho (named it My App i think it created the name automatically) (machine to machine application ) to call the api 
 When you create that machine to machine application in aut0 it will ask for at least one api that 
@@ -51,6 +83,10 @@ curl --request GET \
 {"message":"All good. You DO NOT need to be authenticated to call /api/public."}%                                                                                                                                                ron@Rons-MBP auth0-login-example % 
 
 6. Similarly if you call the http://localhost:8080/sell-online-api/api/private-scoped
+
+To add the necessary permission  login to auth0 use login using google https://manage.auth0.com/dashboard/us/dev-4bybm7c6skkix2ug/applications
+and click on the left side the APIs and choose our api name which we created as "Quickstarts" and then you will see the tab permssion where you can click and add permission 
+
 endpoint, you need to pass the access token and the client application which client id and secret you 
 used to get the access token must have had the permission read:message. 
 SO how it works and how we can implement this with a front end app

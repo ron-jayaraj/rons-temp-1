@@ -15,9 +15,12 @@ import com.ron.sell.online.domain.Message;
 @CrossOrigin(origins = "*")
 public class APIController {
 
+    // READ RonsNotes under resources folder
+  // test url  https://localhost:8443/sell-online-api/api/public
+  //look at security config class where itis controlled
     @GetMapping(value = "/public")
     public Message publicEndpoint() {
-        return new Message("All good. You DO NOT need to be authenticated to call /api/public.");
+        return new Message("All good. You DO NOT need to be authenticated to call /api/public."); //look at security config class where itis controlled
     }
 
     @GetMapping(value = "/private")

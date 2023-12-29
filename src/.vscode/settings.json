@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": [
+        "main/java"
+    ],
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/ron/.m2/repository/org/springframework/spring-core/5.3.18/spring-core-5.3.18.jar"
+    ]
+}
